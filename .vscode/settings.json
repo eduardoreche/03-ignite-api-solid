@@ -1,0 +1,16 @@
+{
+  "prettier.enable": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "eslint.format.enable": true,
+  "editor.formatOnSaveMode": "file",
+  "editor.formatOnSave": true,
+  "eslint.validate": [
+    "javascript",
+    "typescriptreact",
+    "typescript",
+    "graphql"
+  ]
+  
+}
