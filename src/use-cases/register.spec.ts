@@ -1,15 +1,20 @@
 import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository'
 import { compare } from 'bcryptjs'
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 import { UserAlreadyExistsError } from './errors/user-already-exists-error'
 import { RegisterUseCase } from './register'
 
-describe('Register Use Case', () => {
-  it('should hash user password upon registration', async () => {
-    const repository = new InMemoryUsersRepository()
-    const registerUseCase = new RegisterUseCase(repository)
+let repository: InMemoryUsersRepository
+let sut: RegisterUseCase
 
-    const { user } = await registerUseCase.execute({
+describe('Register Use Case', () => {
+  beforeEach(() => {
+    repository = new InMemoryUsersRepository()
+    sut = new RegisterUseCase(repository)
+  })
+
+  it('should hash user password upon registration', async () => {
+    const { user } = await sut.execute({
       name: 'Jonh Doe',
       email: 'jonh.doe@tests.com',
       password: 'aaa123',
@@ -24,19 +29,16 @@ describe('Register Use Case', () => {
   })
 
   it('should not be able to register with same email twice', async () => {
-    const repository = new InMemoryUsersRepository()
-    const registerUseCase = new RegisterUseCase(repository)
-
     const email = 'jonh.doe@tests.com'
 
-    await registerUseCase.execute({
+    await sut.execute({
       name: 'Jonh Doe',
       email,
       password: 'aaa123',
     })
 
     await expect(() =>
-      registerUseCase.execute({
+      sut.execute({
         name: 'Jonh Doe',
         email,
         password: 'aaa123',
@@ -45,10 +47,7 @@ describe('Register Use Case', () => {
   })
 
   it('should be able to register', async () => {
-    const repository = new InMemoryUsersRepository()
-    const registerUseCase = new RegisterUseCase(repository)
-
-    const { user } = await registerUseCase.execute({
+    const { user } = await sut.execute({
       name: 'Jonh Doe',
       email: 'jonh.doe@tests.com',
       password: 'aaa123',
