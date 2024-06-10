@@ -7,16 +7,16 @@ export async function nearby(request: FastifyRequest, reply: FastifyReply) {
     latitude: z.number().refine(value => {
       return Math.abs(value) <= 90
     }),
-    longitute: z.number().refine(value => {
+    longitude: z.number().refine(value => {
       return Math.abs(value) <= 180
     })
   })
 
-  const { latitude, longitute } = registerBodySchema.parse(request.body)
+  const { latitude, longitude } = registerBodySchema.parse(request.body)
 
   const nearbyGymUseCase = makeFetchNearbyGymsUseCase()
 
-  const { gyms } = await nearbyGymUseCase.execute({ userLatitude: latitude, userLongitude: longitute })
+  const { gyms } = await nearbyGymUseCase.execute({ userLatitude: latitude, userLongitude: longitude })
 
   return reply.status(200).send({
     gyms
